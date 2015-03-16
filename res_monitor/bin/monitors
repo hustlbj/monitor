@@ -1,0 +1,21 @@
+#!/bin/sh
+MONDIR="$( cd -P `dirname $0` && cd -P ../ && pwd )"
+
+com=$1
+opt=$2
+
+if [ -z "`echo 'start stop status'|grep $opt`" ] || [ -z "`echo 'server worker agent all'|grep $com`" ]; then  
+    echo "monitors [server|worker|agent|all] [start|stop|status]"
+    exit 0
+fi
+
+cd $MONDIR
+if [ $com = 'all' ]; then
+    for com in server worker agent
+    do
+        echo $com
+        bin/mon${com}s $opt
+    done
+else
+    bin/mon${com}s $opt
+fi

@@ -1,0 +1,132 @@
+#!/bin/sh
+MONDIR="$( cd -P `dirname $0` && cd -P ../ &&pwd )"
+RCDIR="/etc"
+INSTALLDIR="/usr/local/monitor"
+
+while getopts ":o:p:t:" opt
+do
+	case "$opt" in
+	o)
+		operation="$OPTARG"
+		;;
+	p)
+		ip="$OPTARG"
+		;;
+	t)
+		type="$OPTARG"
+		;;
+	esac
+done
+
+case "$operation" in 
+'setup')
+	cd $MONDIR
+	echo $ip
+	if [ -z "`ifconfig 2>/dev/null | grep $ip`" ]; then
+		echo "install to remote..."
+		ssh $ip "if [ -d $INSTALLDIR ]; then
+					if [ -d $INSTALLDIR/comp_monitor ]; then
+						rm -rf $INSTALLDIR/comp_monitor/*;
+					else
+						mkdir -p $INSTALLDIR/comp_monitor
+					fi
+					chmod -R 755 $INSTALLDIR/comp_monitor
+				fi"
+		scp -r ./* $ip:$INSTALLDIR/comp_monitor
+		echo "done."
+	else
+		echo "install to local..."
+		if [ -d $INSTALLDIR ]; then
+			if [ -d $INSTALLDIR/comp_monitor ]; then
+				rm -rf $INSTALLDIR/comp_monitor/*;
+			else
+				mkdir $INSTALLDIR/comp_monitor
+			fi
+		else
+			mkdir $INSTALLDIR
+			mkdir $INSTALLDIR/comp_monitor
+		fi
+		cp -r ./* $INSTALLDIR/comp_monitor
+		chmod -R 755 $INSTALLDIR/comp_monitor
+		echo "done."
+	fi
+	;;
+
+'run')
+	cd $MONDIR
+	echo $ip
+	echo "start comp_monitor("$type")..."
+	if [ -z "`ifconfig 2>/dev/null | grep $ip`" ]; then
+		case "$type" in
+		'server')
+			ssh $ip "$INSTALLDIR/comp_monitor/cmserverd start;"
+			;;
+		'worker')
+			ssh $ip "$INSTALLDIR/comp_monitor/cmworkerd start;"
+			;;
+		'agent')
+			ssh $ip "$INSTALLDIR/comp_monitor/cmagentd start;"
+			;;
+		esac
+	else
+		case "$type" in
+		'server')
+			$INSTALLDIR/comp_monitor/cmserverd start
+			;;
+		'worker')
+			$INSTALLDIR/comp_monitor/cmworkerd start
+			;;
+		'agent')
+			$INSTALLDIR/comp_monitor/cmagentd start
+			;;
+		esac
+	fi
+
+'stop')
+	cd $MONDIR
+	echo $ip
+	echo "stop comp_monitor("$type")..."
+	if [ -z "`ifconfig 2>/dev/null | grep $ip`" ]; then
+		case "$type" in
+		'server')
+			ssh $ip "$INSTALLDIR/comp_monitor/cmserverd stop;"
+			;;
+		'worker')
+			ssh $ip "$INSTALLDIR/comp_monitor/cmworkerd stop;"
+			;;
+		'agent')
+			ssh $ip "$INSTALLDIR/comp_monitor/cmagentd stop;"
+			;;
+		esac
+	else
+		case "$type" in
+		'server')
+			$INSTALLDIR/comp_monitor/cmserverd stop
+			;;
+		'worker')
+			$INSTALLDIR/comp_monitor/cmworkerd stop
+			;;
+		'agent')
+			$INSTALLDIR/comp_monitor/cmagentd stop
+			;;
+		esac
+	fi
+'remove')
+	cd $MONDIR
+	echo $ip
+	echo "remove comp_monitor..."
+	if [ -z "`ifconfig 2>/dev/null | grep $ip`" ]; then
+		ssh $ip "$INSTALLDIR/comp_monitor/cmmonitord stop;
+				 $INSTALLDIR/comp_monitor/cmmanagerd stop;
+				 $INSTALLDIR/comp_monitor/cmserverd stop;
+				 rm -rf $INSTALLDIR/comp_monitor/*;
+				 "
+	else
+		$INSTALLDIR/comp_monitor/cmmonitord stop
+		$INSTALLDIR/comp_monitor/cmmanagerd stop
+		$INSTALLDIR/comp_monitor/cmserverd stop
+		rm -rf $INSTALLDIR/comp_monitor/*
+	echo "done."
+	fi
+	;;	
+esac

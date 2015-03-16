@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+
+from monserver.api import API, cloud
+import json
+import os
+
+def main():
+	vmsinfo = json.loads(cloud.get_vms_info(template=0))
+	if not vmsinfo[0]:
+		return
+
+	for vm in vmsinfo[1]:
+		print vm['guid'],vm['ip']
+		os.system("./mon-agent -o stop -p %s" % vm['ip'])
+		os.system("./mon-agent -o setup -t 1 -p %s" % vm['ip'])
+
+	return
+
+main()
+

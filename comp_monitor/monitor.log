@@ -1,0 +1,9 @@
+[ERROR] 2014-10-29 13:09:30,711 - service.Main: (4, 'Interrupted system call')
+[ERROR] 2014-11-05 10:03:51,026 - service.Main: (4, 'Interrupted system call')
+[ERROR] 2014-11-05 10:03:58,002 - service.Main: (4, 'Interrupted system call')
+[ERROR] 2014-11-05 10:09:01,031 - service.Main: 'str' object has no attribute 'keys'
+[ERROR] 2014-11-05 10:18:55,906 - service.Main: (4, 'Interrupted system call')
+[ERROR] 2014-11-05 10:19:03,546 - service.Main: (4, 'Interrupted system call')
+[ERROR] 2014-11-05 10:39:13,500 - service.Main: (4, 'Interrupted system call')
+[ERROR] 2014-11-05 10:39:20,489 - service.Main: (4, 'Interrupted system call')
+[INFO] 2014-11-05 17:07:30,004 - logger.xxx: this is info log

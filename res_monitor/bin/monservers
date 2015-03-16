@@ -1,0 +1,34 @@
+#!/bin/sh
+MONDIR="$( cd -P `dirname $0` && cd -P ../ && pwd )"
+
+opt=$1
+
+cd $MONDIR
+LIST=`cat monitorrc | grep server | awk '{print $2}'`
+
+case "$opt" in
+start)
+    bin/mon-server -o run
+    ;;
+
+stop)
+    bin/mon-server -o stop 
+    ;;
+
+status)
+    for server in $LIST
+    do
+        echo $server
+        if [ -z "`ifconfig 2>/dev/null | grep $server `" ]; then
+            ssh $server "ps aux | grep monserver | grep -v grep | grep -v status"
+        else
+            ps aux | grep monserver | grep -v grep
+        fi
+    done
+    ;;
+
+*)
+    echo "$0 [ start | stop | status ]"
+    ;;
+    
+esac

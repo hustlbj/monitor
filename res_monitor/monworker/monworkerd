@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+import sys
+import os.path as path
+
+__all__ = []
+
+binary = "monworker.worker.MonWorker"
+
+curdir = path.dirname(path.abspath(__file__))
+pardir = path.dirname(curdir)
+sys.path.append(pardir)
+
+
+from common.service import Launcher
+from common.logger import config_logging
+from include.configobj import ConfigObj
+
+CONF = ConfigObj(curdir+ path.sep +'worker.conf')
+config_logging(CONF['log_file'])
+
+
+if __name__=="__main__":
+	args = sys.argv
+	servicename = path.basename(args[0])
+	
+	launcher = Launcher(servicename, binary)
+
+	if len(args) == 2:
+		action = args[1].strip()
+
+		if action == "start":
+			launcher.start()
+		elif action == "stop":
+			launcher.stop()
+		elif action == "restart":
+			launcher.restart()
+		else:
+			launcher.help()
+	else:
+		launcher.help()
+
+

@@ -1,0 +1,460 @@
+﻿/*
+--------------------------------------------------------------
+Admin:	system status graph area
+*/
+.accordingContentContainer{
+	width:300px;
+	margin-bottom:2px;
+	font-size:12px;	
+}
+.accordingContentTile{
+	width:80px;
+	float:left;
+	font-weight:bold;
+}
+.accordingContentDetail{
+	width:220px;
+	float:right;
+	font-size:10px;
+}
+.accordingEndClear{
+	clear:both;
+}
+
+#statusMonitorDetails {
+	width: 580px;
+	height: 260px;
+	float: right;
+	margin: 15px 15px 0 0;
+}
+/*
+table {
+	width: 100%;
+}
+*/	
+
+
+/*
+--------------------------------------------------
+	Add New Cluster Node Dialog
+*/
+.dialog-body
+{
+	width: 780px; 
+	height: 25px;  
+	padding-bottom:5px; 
+	padding-top:5px;
+}
+
+.dialog-body-unit
+{
+	float: left;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+.dialog-body-unit div:nth-child(1)
+{
+	float: left;
+	width: 100px;
+}
+
+.dialog-body-unit div:nth-child(2)
+{
+	float: left;
+	width: 180px;
+}
+
+.dialog-confirm-unit
+{
+	float: left;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	padding-left: 25px;
+}
+
+.dialog-confirm-unit div:nth-child(1)
+{
+	float: left;
+	width: 100px;
+}
+
+.dialog-confirm-unit div:nth-child(2)
+{
+	float: left;
+	width: 180px;
+	padding-left: 10px;
+	background-color: #e5e5e5;
+}
+
+.dialog-bottom
+{
+	position: absolute;
+	margin: 0px auto;
+	width: 90%;
+	bottom: 50px;
+}
+
+.forwardbtn
+{	
+	float: right;
+}
+
+.backwardbtn
+{	
+	float: left;
+}
+
+/*
+ * -----------------------------------------------
+ *         Log View
+ *
+ */
+/*** General  ***/
+#log_window {
+	width: 800px;
+	height: 650px;
+	margin: 0px auto;
+	position: absolute;
+	left: 80px;
+}
+#log_content, #log_statistics {
+	width: 800px;
+	height: 690px;
+	border: dashed 1px;
+	box-shadow: 5px 5px 5px #888;
+	padding:10px;
+	margin: 0px auto;
+	position: absolute;
+	overflow-y: scroll;
+}
+#log_content { top: 0px; left: 0px; }
+#log_statistics { top: 0px; left: 1000px; }
+
+/*** Logs Presitation ***/
+.log_content_head table tr td {
+	color: #ffffff;
+	background-color: #4c4c4c;
+	font-family: Helvetica;
+	height: 30px;
+	text-align: center;
+	border: 1px;
+}
+
+.log_content_head {
+	box-shadow: 2px 2px 2px #aaa;
+} 
+
+.log_content_head table {width:100%;}
+.log_content_head table tr td:nth-child(1) { width:10%;}
+.log_content_head table tr td:nth-child(2) { width:14%;}
+.log_content_head table tr td:nth-child(3) { width:20%;}
+.log_content_head table tr td:nth-child(4) { width:6%;}
+.log_content_head table tr td:nth-child(5) { width:20%;}
+.log_content_head table tr td:nth-child(6) { width:20%;}
+.log_content_head table tr td:nth-child(7) { width:10%;}
+
+.log_content_body div {
+	box-shadow: 2px 2px 2px #aaa;
+	-webkit-border-radius: 5px;
+	display: none;
+}
+
+
+.log_content_body div table tr td {
+	color: #000000;
+	background-color: #FFFFF0;
+	font-family: Helvetica;
+	font-size: 12px;
+	height: 30px;
+	text-align: center;
+	border: 1px;
+}
+
+.log_content_body div table tr td:nth-child(1) { width:10%;}
+.log_content_body div table tr td:nth-child(2) { width:14%;}
+.log_content_body div table tr td:nth-child(3) { width:20%;}
+.log_content_body div table tr td:nth-child(4) { width:6%;}
+.log_content_body div table tr td:nth-child(5) { width:20%;}
+.log_content_body div table tr td:nth-child(6) { width:20%;}
+.log_content_body div table tr td:nth-child(7) { width:10%;}
+
+#btn_earlier {
+	width: 60%;
+	height: 30px;
+	margin: 10px auto;
+	font-size: 30px;
+	line-height: 30px;
+	background: #FEFFE5;
+	border: 1px solid #F9F2A7;
+	text-align: center;
+	display: none;
+}
+#btn_earlier a{
+	color: #D4A639;
+}
+#btn_earlier:hover {
+	background:#FDFFD2;
+}
+/*** Window for Logs Statistics ***/
+#action_plot, #site_plot {
+	width: 600px;
+	height: 350px;
+	margin:0px auto;
+}
+
+.float_panel {
+	width: 120px;
+	height: 50px;
+	padding-left: 15px;
+	font-size: 10px;
+	font-family: Arial,Helvetica,sans-serif;
+	background-color: #FDFFD2;
+	line-height: 25px;
+	text-align: left;
+	border: 1px solid #f9f2a7;
+	-webkit-border-radius: 5px;
+	opacity: 0.7;
+	filter:alpha(opacity=70);
+	color: #000;
+	box-shadow: 2px 2px 5px #999;
+	position: absolute;
+	display: none;
+}
+.float_panel div:first-child {font-weight:bold;}
+/*** Windows Switcher ***/
+#btn_left, #btn_right {
+	background-color: #888888;
+	color: #ffffff;
+	font-size: 50px;
+	font-family: 'Segoe UI', 'Microsoft Yahei', Helvetica;
+	font-weight: bold;
+	text-align: center;
+	line-height: 40px;	
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	-webkit-border-radius: 10px;	
+	filter:alpha(opacity=10);
+	opacity: 0.1;
+}
+#btn_left { left: 10px; top: 250px; }
+#btn_right { right: 10px; top: 250px; }
+
+/* Scroll Bar */
+::-webkit-scrollbar-track-piece {  
+	background-color:#fafafa;
+	-webkit-border-radius:3;  
+}  
+
+::-webkit-scrollbar {  
+	width:15px;  
+	height:8px;  
+}  
+
+::-webkit-scrollbar-thumb {  
+	height:30px;  
+	background-color:#999;  
+	-webkit-border-radius:7px;  
+	outline:2px solid #fafafa;  
+	outline-offset:-2px;  
+	border: 2px solid #fafafa;
+}  
+
+::-webkit-scrollbar-thumb:hover {  
+	height:30px;  
+	background-color:#9f9f9f;  
+	-webkit-border-radius:8px;  
+} 
+
+/*******************************************
+ *
+ *           Traces 
+ */
+.tra_component {
+	border:0.1em dotted #d4e06b;
+	opacity: 0.8;
+	width: 50px;
+	height: 30px;
+	z-index: 20;
+	position: absolute;;
+	color: black;
+	padding-top: 3px;
+	background-color: white;
+	text-align: center;
+	font-family: helvetica, sans;
+	background-color: white;
+	cursor: pointer;
+	box-shadow: 2px 2px 19px #aaa;
+	-webkit-box-shadow: 2px 2px 19px #aaa;
+}
+
+#adminTracesContainer {
+	width:960px; 
+	height:600px;
+	padding:10px;
+	margin-top:20px;
+	position: absolute;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+#adminTracesGraphContainer {
+	position:absolute;
+	width: 380px;
+	height: 500px;
+	border: 0.1em dotted black;
+	left: 580px;
+	overflow:auto;
+	background-color: white;
+}
+
+#tracesTableContainer {
+	position: absolute;
+	width: 550px;
+	left: 10px;
+}
+
+#componentNameDisplay {
+	position: absolute;
+	left: 0px;
+	top: 450px;
+	height: 30px;
+	z-index: 30;
+	line-height: 30px;
+	background-color: grey;
+	color: white;
+	padding-left: 5px;
+	padding-right: 5px;
+	-webkit-border-radius: 5px;
+}
+
+#reportContainer {
+	position: absolute;
+	width: 550px;
+	height: 500px;
+	left: 980px;
+	font-size: 80%
+}
+
+.platform-mainarea {
+	height: 800px;
+}
+
+#moveleft{
+	width: 30px;
+	height: 30px;
+	color: black;
+	position: absolute;
+	left: 580px;
+	top: 510px;
+	font: bold 25px/30px Verdana, Geneva, sans-serif;
+	text-align: left;
+}
+
+#moveright{
+	width: 30px;
+	height: 30px;
+	color: black;
+	position: absolute;
+	left: 930px;
+	top: 510px;
+	font: bold 25px/30px Verdana, Geneva, sans-serif;
+	text-align: right;
+}
+
+#generalReports table { width: 100%;}
+#generalReports table:nth-child(1) { font-weight: bold; }
+#generalReports td { width: 25%; text-align: center; background-color: #EBEBF0;}
+
+#detailReports{
+	width: 100%;
+}
+
+#detailReports .subtable-title
+
+{
+
+	background-image: url(/links/image/subtable-title-img.jpg);
+
+	color: black;
+
+	padding-top: 7px;
+
+	padding-right: 15px;
+
+	padding-bottom: 7px;
+
+	padding-left: 15px;
+
+	text-align: left;
+
+	font-size: 17px;
+
+	width: 97%;
+
+	text-shadow: 2px 2px 7px #D4F9FC;
+
+}
+
+
+
+#detailReports .subtable td
+
+{
+
+	
+
+	color: rgb(0, 0, 0);
+
+	padding-top: 7px;
+
+	padding-right: 15px;
+
+	padding-bottom: 7px;
+
+	padding-left: 15px;
+
+	text-align: left;
+
+	font-size: 14px;
+
+	border-bottom: 1px solid #fff;
+
+	
+
+}
+
+
+
+#detailReports .subtable td.head
+
+{
+
+	width: 10%;
+
+	font-weight: bold;
+
+	letter-spacing: 0.9px;
+
+}
+
+
+
+#detailReports .subtable td.info
+
+{
+
+	width: 35%;
+
+	letter-spacing: 0.1mm;
+
+	font-family:Tahoma；
+
+	line-height:150%;
+
+	
+
+}
+
+

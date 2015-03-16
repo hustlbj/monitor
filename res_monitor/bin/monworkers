@@ -1,0 +1,45 @@
+#!/bin/sh
+MONDIR="$( cd -P `dirname $0` && cd -P ../ && pwd )"
+
+opt=$1
+
+cd $MONDIR
+LIST=`cat monitorrc | grep worker | awk '{print $2}'`
+
+case "$opt" in
+start)
+    for worker in $LIST
+    do
+        echo $worker
+        if [ -n "`ifconfig 2>/dev/null | grep '$worker '`" ]; then
+            monworker/monworkerd start
+        else
+            bin/mon-worker -o run -p $worker
+        fi
+    done
+    ;;
+
+stop)
+    for worker in $LIST
+    do
+        echo $worker
+        if [ -n "`ifconfig 2>/dev/null | grep '$worker '`" ]; then
+            monworker/monworkerd stop
+        else
+            bin/mon-worker -o stop -p $worker
+        fi
+    done
+    ;;
+
+status)
+    for worker in $LIST
+    do
+        echo $worker
+        ssh $worker "ps aux | grep monworker | grep -v grep | grep -v status"
+    done
+    ;;
+
+*)
+    echo "$0 [ start | stop | status ]"
+    ;;
+esac

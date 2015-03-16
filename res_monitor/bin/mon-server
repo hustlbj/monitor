@@ -1,0 +1,152 @@
+#!/bin/sh
+MONDIR="$( cd -P `dirname $0` && cd -P ../ && pwd )"
+RCDIR="/etc"
+INSTALLDIR="/usr/local/monitor"
+
+while getopts ":o:p:d:" opt
+do
+    case "$opt" in
+    o)
+        operation="$OPTARG"
+        ;;
+    p)
+        ip="$OPTARG"
+		cd $MONDIR
+		if [ -z "`cat ./monitorrc | grep server`" ]; then
+			echo "server $ip" >> ./monitorrc
+		else
+			sed -i "s/server .*/server $ip/g" ./monitorrc
+		fi
+        ;;    
+    #f)
+    #    front="$OPTARG"
+    #    cd $MONDIR
+    #    sed -i "s/frontnode.*/frontnode $front/g" ./monitorrc
+    #    ;;
+
+    d)
+        db="$OPTARG"
+		cd $MONDIR
+        sed -i "s/addr =.*/addr = '$db'/g" monserver/server.conf
+        ;;    
+   esac
+done
+
+case "$operation" in 
+'setup')
+    cd $MONDIR
+    
+    ip=`cat monitorrc | grep "server" | awk '{print $2}'`
+    #front=`cat monitorrc | grep "frontnode" | awk '{print $2}'`
+    echo $ip
+    if [ -n "$ip" ]; then
+        #sed -i "s/frontnode =.*/frontnode = '$front'/g" monserver/server.conf
+        sed -i "s/r_addr =.*/r_addr = '$ip'/g" monserver/server.conf
+        sed -i "s/c_addr =.*/c_addr = '$ip'/g" monserver/server.conf
+
+		if [ -z "`ifconfig 2>/dev/null | grep $ip`" ]; then
+			echo "install to remote..."
+            ssh $ip "if [ -d $INSTALLDIR ]; then
+                         if [ -d $INSTALLDIR/res_monitor ]; then 
+                             rm -rf $INSTALLDIR/res_monitor/monserver; 
+                         else 
+                             mkdir $INSTALLDIR/res_monitor; 
+                         fi
+                     else
+                         mkdir -p $INSTALLDIR/res_monitor
+                     fi"
+
+            scp -r monserver $ip:$INSTALLDIR/res_monitor
+			echo "done."
+
+			echo "register self running when os starts..."
+			ssh $ip "touch $RCDIR/rc.local;
+					if [ -z '`cat $RCDIR/rc.local | grep monserverd`' ]; then
+						echo '$INSTALLDIR/res_monitor/monserver/monserverd start' >> $RCDIR/rc.local;
+					fi;
+					chmod 755 $INSTALLDIR/res_monitor/monserver"
+			echo "done"
+
+		else
+			echo "install to local..."
+			if [ -d $INSTALLDIR ]; then
+			    if [ -d $INSTALLDIR/res_monitor ]; then 
+					rm -rf $INSTALLDIR/res_monitor/monserver; 
+				else 
+					mkdir $INSTALLDIR/res_monitor; 
+				fi
+			else
+			    mkdir $INSTALLDIR 
+			    mkdir $INSTALLDIR/res_monitor
+			fi
+			cp -r monserver $INSTALLDIR/res_monitor
+			chmod 755 $INSTALLDIR/res_monitor/monserver
+			echo "done"
+
+			echo "register self running when os starts..."
+			touch $RCDIR/rc.local
+			if [ -z "`cat $RCDIR/rc.local | grep monserverd`" ]; then
+				echo "$INSTALLDIR/res_monitor/monserver/monserverd start" >> $RCDIR/rc.local
+			else
+				echo "do nothing on localhost"
+			fi
+			echo "done"
+		fi
+
+	else
+		echo "need ip."
+	fi
+	;;
+
+
+'remove')
+    cd $MONDIR
+    ip=`cat monitorrc | grep "server" | awk '{print $2}'`
+    if [ -n "$ip" ]; then
+		echo "remove monserver..."
+		sed -i "s/server $ip//g" ./monitorrc
+        if [ -z "`ifconfig 2>/dev/null |grep $ip`" ]; then
+            ssh $ip "if [ -d $INSTALLDIR/res_monitor ]; then 
+                         rm -rf $INSTALLDIR/res_monitor/monserver; 
+                     fi;
+                     sed -i 's/.*monserverd.*//g' $RCDIR/rc.local;
+                     "
+        else
+            sed -i "s/.*monserverd.*//g" $RCDIR/rc.local
+			rm -rf $INSTALLDIR/res_monitor
+        fi
+		echo "done"
+    else
+        echo "need ip."
+    fi
+    ;;
+
+
+'run')
+    cd $MONDIR
+    ip=`cat monitorrc | grep "server" | awk '{print $2}'`
+    if [ -n "$ip" ]; then
+        if [ -z "`ifconfig 2>/dev/null | grep $ip`" ]; then
+            ssh $ip "$INSTALLDIR/res_monitor/monserver/monserverd start;"
+        else
+            monserver/monserverd start
+        fi
+    fi
+    ;;
+
+
+'stop')
+    cd $MONDIR
+    ip=`cat monitorrc | grep "server" | awk '{print $2}'`
+    if [ -n "$ip" ]; then
+        if [ -z "`ifconfig 2>/dev/null | grep $ip`" ]; then
+            ssh $ip "$INSTALLDIR/res_monitor/monserver/monserverd stop;"
+        else
+            monserver/monserverd stop
+        fi
+    fi
+    ;;
+   
+esac
+
+

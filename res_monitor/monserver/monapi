@@ -1,0 +1,192 @@
+#!/usr/bin/env python
+
+import os.path as path
+import json
+import zlib
+
+from include.craneQueue.agent import RPCAgent, _main
+from include.configobj import ConfigObj
+from common.logger import config_logging, getlogger
+
+# Load Config file
+curdir = path.dirname(path.abspath(__file__))
+CONF = ConfigObj(curdir+path.sep+'server.conf')
+METRICDESC = ConfigObj(curdir+path.sep+'metric.description')
+
+config_logging(CONF['log_file'])
+
+import database
+
+
+class MonitorAgent(RPCAgent):
+    """
+    API server.
+    """
+
+    def __init__(self, conf, service):
+        super(MonitorAgent, self).__init__(conf, service, destination=CONF['frontnode'])
+	self.api = API()
+
+    def rpc_callback(self, message):
+        msg = self.msg_make(message)
+
+        try:
+            func = getattr(self.api, msg["method"])
+            result = func(**msg['args'])
+        except Exception, err:
+            print str(err)
+            return self.make_msg([False, str(err)])
+
+        return self.make_msg(result)
+
+
+
+def jsonize(func):
+    """
+    Decorate function to ensure result with json format.
+    """
+
+    def post(*args, **kargs):
+        ret = func(*args, **kargs)
+        return json.dumps(ret)
+
+    post.__name__ = func.__name__
+    return post
+
+
+class API():
+    """
+    API of Mon-Server
+    """
+
+    def __init__(self):
+        conf = CONF['db']
+        self.db = database.MongoDB((conf['addr'], conf.as_int('port')), conf['db'], conf['meta_collection'])
+        self.metric_description = dict(METRICDESC)
+
+
+    def get_stats(self, host, metric, strategy='max', step=15, start=None, end=None):
+        """
+        Get metric data.
+
+        :param host:
+        :param metric:
+        :param strategy:
+        :param step:
+        :param start:
+        :param end:
+        :returns:
+        """
+        print self.db.get_hosts()
+        if host not in 	self.db.get_hosts():
+            return [False, "host %s doesn't exist." % host]
+
+        if not (start or end):
+            ts = None
+        elif start < 0:
+            ts = (start, None)
+        elif start and end and start < end:
+            ts = (start, end)
+        else:
+            return [False, 'wrong start and end']
+
+        ret = self.db.get_metric(host, metric, ts, step)
+        fixed_ret = map(lambda entry: [entry['time'], entry['value']], ret)
+
+        return [True, fixed_ret]
+
+
+    def get_host_info(self, host):
+        """
+        Get host platform information.
+
+        :param host:
+        :returns:
+        """
+
+        ret = self.db.get_host(host, 'info')
+        if not ret:
+            return [False, "host %s doesn't exist." % host]
+
+        return [True, ret['info']]
+
+
+    def get_metric_list(self, host):
+        """
+        Get host metric list.
+
+        :param host:
+        :returns:
+        """
+
+        ret = self.db.get_host(host, 'metrics')
+        if not ret:
+            return [False, "host %s doesn't exist." % host]
+
+        return [True, ret['metrics']]
+
+    
+    def get_host_list(self):
+        """
+        Get host list.
+
+        :returns:
+        """
+
+        ret = self.db.get_hosts()
+
+        return [True, ret]
+
+    def remove_host(self, host_list):
+        """
+        Remove host in the list from database.
+
+        :param host_list:
+        :returns:
+        """
+
+        if type(host_list) is str:
+            host_list = [host_list]
+        
+	if type(host_list) is not list:
+            return [False, "wrong type"]
+
+        ret = self.db.remove_host(host_list)
+        return [True, ret]
+
+    def get_metric_description(self):
+        """
+        Get description infomation for each one of metrics.
+
+        :returns:
+        """
+        return [True, self.metric_description]
+
+    def dump_metric(self, start=None, end=None):
+        """
+        Dump specific metrics of all hosts.
+
+        :param start:
+        :return:
+        """
+
+        if not (start or end):
+            ts = None
+        elif start < 0:
+            ts = (start, None)
+        elif start and end and start < end:
+            ts = (start, end)
+        else:
+            return [False, 'wrong start and end']
+
+        ret = self.db.dump_metric(self.db.get_hosts(), ts, step=30) 
+
+        return zlib.compress(str(ret))
+
+
+if __name__=="__main__":
+    conf={}
+    conf["DIRECT_EXCHANGE"] = "call_direct_topic"
+    conf["TOPIC_EXCHANGE"] = "service_call_topic"
+    conf["RPC_EXCHANGE"] = "service_cast_topic"
+    _main(conf, MonitorAgent, "monitorapi")

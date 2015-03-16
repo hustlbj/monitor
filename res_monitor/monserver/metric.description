@@ -1,0 +1,40 @@
+cpu_user = CPU用户态用时的百分比
+cpu_nice = nice值为负的进程运行时间的百分比
+cpu_system = CPU内核态用时的百分比
+cpu_idle = CPU空闲时间的百分比
+cpu_usage = CPU使用时间的百分比
+cpu_iowait = 等待硬盘IO的时间的百分比
+cpu_irq = 硬中断时间的百分比
+cpu_softirq = 软中断时间的百分比
+
+cached = 用于Cache的内存大小
+mem_free = 空闲内存的大小
+mem_available = 可用内存的大小
+mem_used = 已用内存的大小
+mem_usage = 已用内存所占总内存的百分比
+buffers = 用于文件缓存的内存大小
+swap_total = 交换空间的总大小
+swap_cached = 交换空间中用于Cache的大小
+swap_free = 交换空间中的空闲容量
+
+load_one = 1分钟内平均加载的进程数
+load_five = 5分钟内平均加载的进程数
+load_fifteen = 15分钟内平均加载的进程数
+
+bytes_in = 网络接口接受的字节数
+bytes_out = 网络接口发送的字节数
+packets_in = 网络接口接受的包的数量
+packets_out = 网络接口发送的包的数量
+
+rps = 每秒完成的读I/O设备次数
+wps = 每秒完成的写I/O设备次数
+rrqmps = 每秒进行merge的读操作数目
+wrqmps = 每秒进行merge的写操作数目
+rsecps = 每秒读扇区数
+wsecps = 每秒写扇区数
+rkBps = 每秒读K字节数
+wkBps = 每秒写K自己数
+util = 一秒钟用于I/O操作的时间百分比
+await = 平均每次设备I/O操作的等待时间
+avgrq_sz = 平均每次设备I/O操作的数据大小
+avgqu_sz = 平均I/O队列长度

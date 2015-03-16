@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>总监控台</title>
+        <link type="text/css" rel="icon" href="/links/image/favicon.png">
+        <!--CSS-->
+        <link type="text/css" href="/links/css/jquery-ui-1.8.14.custom.css" rel="stylesheet">
+        <link type="text/css" href="/links/css/demo_table_jui.css" rel="stylesheet">
+        <link type="text/css" href="/links/css/main.css" rel="stylesheet">
+        <link type="text/css" href="/links/css/platform.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/links/css/style.css">
+        <link rel="stylesheet" type="text/css" href="/links/css/chosen.css">
+        <link rel="stylesheet" type="text/css" href="/links/css/comp_states.css">
+
+        <!--JS-->
+        <script src="/links/js/jquery-1.7.1.js" type="text/javascript"></script>
+        <!--<script src="/links//globalVar.js" type="text/javascript"></script>-->
+        <script src="/links/js/jquery-ui-1.8.12.custom.min.js" type="text/javascript"></script>
+        <script src="/links/js/jquery.corner.js" type="text/javascript"></script>
+        <script src="/links/js/jquery.dataTables.js" type="text/javascript"></script>
+        <!--<script src="/links/js/TableTools.min.js" type="text/javascript"></script>-->
+        <!--<script src="/links/js/main.js" type="text/javascript"></script>-->
+        <script src="/links/js/chosen.jquery.js" type="text/javascript"></script>
+		<script src="/links/js/highcharts.js" type="text/javascript"></script>
+		<script src="/links/js/jquery.jsPlumb-1.4.1-all-min.js" type="text/javascript"></script>
+		<script src="/links/js/jquery-ui.min.js" type="text/javascript"></script>
+		<!--<script src="/links/js/comp_states.js" type="text/javascript"></script>-->
+		<script src="/links/js/main-monitor-new.js" type="text/javascript"></script>
+       
+	</head>
+
+	<body ryt13248="1">
+        <div class="platform-top">
+            <div style="float:left">
+                <a class="logo" href="#"><img src="/links/image/logo1.png"></a>
+				<a class="logo1" href="#"><img src="/links/image/logo2.png"></a>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="top-right">
+                <a>欢迎登录</a>
+            </div>
+        </div>
+
+        <div class="platform-mainDiv">
+            <ul class="tabs">
+                <li class="active">
+                    <a href="#">监控台</a>
+                </li>
+            </ul>
+<!--           
+<link rel="stylesheet" href="/links/css/ui.selectmenu.css">
+<link rel="stylesheet" href="/links/css/jquery-ui-1.8.14.custom.css">
+<link rel="Stylesheet" href="/links/css/jquery.jqplot.min.css">
+<link rel="Stylesheet" href="/links/css/admin-monitor.css">
+<link rel="Stylesheet" href="/links/css/x_t.css">
+<link rel="Stylesheet" href="/links/css/platform.css">
+<link rel="Stylesheet" href="/links/css/general-layout.css">
+-->
+<!--<script src="/links/js/jquery.flot.js" type="text/javascript"></script>-->
+<!--<script src="/links/js/ui.selectmenu.js" type="text/javascript"></script>-->
+<!--<script src="/links/js/utils.js" type="text/javascript"></script>-->
+<!--<script src="/links/js/PlotWrapper.js" type="text/javascript"></script>-->
+<!--<script src="/links/js/PerfChart.js" type="text/javascript"></script>-->
+<!--<script src="/links/js/jquery.jqplot.min.js" type="text/javascript"></script>-->
+<!--<script src="/links/js/jqplot.pieRenderer.min.js" type="text/javascript"></script>-->
+<!--
+<script src="/links/js/admin-status-platform.js" type="text/javascript"></script>-->
+<!--
+<script src="/links/js/general-layout.js" type="text/javascript"></script>
+-->
+<!-- <script src="/links/js/traces_admin.js" type="text/javascript"></script> -->
+<!--<script src="/links/js/admin-clusterservicemonitor-platform.js" type="text/javascript"></script>-->
+
+		<div class="tab_container">
+			<div class="tab_content">
+				<div class="platfrom-left-div">
+					<div class="platfrom-div-head">导航栏
+					</div>
+					<div class="platfrom-left-div-content">
+						<h2>总监控台</h2>
+						<ul>
+							<li><a href="javascript:void(0);" id="openresourcepanel">－ 资源监控</a></li>
+							<li><a href="javascript:void(0);" id="opencomponentspanel">－ 组件监控</a></li>
+							<!--此功能暂不使用
+							<li><a href="javascript:void(0);" id="opentracepanel">－ 请求跟踪</a></li>
+							-->
+						</ul>                        
+						<h2>帮助</h2>
+						<ul type="square">
+							<li><a href="http://hust.hustcloud.com/admin/index.html">－ 返回主页</a></li>
+							<li><a href="http://hust.hustcloud.com/manual/manualMonitor">－ 开发文档</a></li>
+						</ul>
+					</div>
+				</div>
+         
+				<div class="platfrom-right-div">
+
+					<div class="platfrom-div-head">操作面板
+					</div>  
+
+					<div>
+						<!-- Hosts&Vms Details -->
+						<div id="hostsDetails" style="display: block;">     
+							<!--control bar-->
+							<div class="control-bar"> 
+								<div style="float:left; font-family:Verdana,Arial,sans-serif; color:black; font-size:13px; font-weight:bold; margin:8px;">选择节点:
+								</div>
+								<select id="adminSystemStatusClusterNode" class="select_site">
+									<option value="hust" selected="selected">测试集群</option>
+								</select>
+								<select id="adminSystemStatusNodeType">
+                                        <option value="virtual">虚拟机</option>
+                                        <option value="pysical" selected="selected">物理机</option>
+                                </select>
+								<div class="mybutton" style="float:right">
+									<a id="adminSystemStatusRefreshTableButton" value="refresh" name="refresh" href="javascript:void(0);">刷新</a>
+								</div>                                                                        
+							</div>
+							<!--control bar end-->
+
+							<!-- platform-mainarea -->
+							<div class="platform-mainarea">
+								<div id="hostmachine"> 
+									<table id="hostinfo_table" class="hostinfo_table">
+										<thead>
+											<tr><th>Host Name</th><th>CPU num</th><th>CPU GHz</th><th>Mem size GB</th><th>Disk num</th><th>Disk Size GB</th><th>Net interfaces</th></tr>
+										</thead>	
+										<tbody>
+										</tbody>
+									</table>
+								</div>     
+			
+								<!--Graph Container-->
+								<div id="adminSystemStatusGraphContainer">
+									<!--SystemStatus Container-->
+									<div id="adminSystemStatusContainer" style="width:960px; height:300px;padding:10px;margin-top:20px;" class="ui-widget-content">
+										<div style="height: 200px; float: left; ">
+											<!--system host info-->
+											<div id="systemHostInfo" style="width:320px;float:left;" class="ui-accordion ui-widget ui-helper-reset ui-accordion-icons" role="tablist">
+												<h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-state-active ui-corner-top" style="" role="tab" aria-expanded="true" aria-selected="true" tabindex="0"><a href="javascript:void(0);">处理器</a></h3>
+												<div style="padding-left: 10px; padding-right: 10px; height: 167px; overflow: auto;" id="host-system-info" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" role="tabpanel"></div>
+												<h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" style="" role="tab" aria-expanded="false" aria-selected="false" tabindex="-1"><a href="javascript:void(0);">网络</a></h3>
+												<div style="padding-left: 10px; padding-right: 10px; height: 167px; overflow: auto; display: none;" id="host-network-info" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" role="tabpanel"></div>
+												<h3 class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" style="" role="tab" aria-expanded="false" aria-selected="false" tabindex="-1"><a href="javascript:void(0);">磁盘</a></h3>
+												<div style="padding-left: 10px; padding-right: 10px; height: 167px; overflow: auto; display: none;" id="host-disk-info" class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" role="tabpanel"></div>
+											</div>
+											<!--system host info end-->
+										</div>
+										<!--HostStatus-->
+										<div id="adminHostStatus" style="width:640px;height:300px;float:right;">
+											<div id="statusMonitorSetting" style="width:600px;padding-left:20px;">
+												<div style="float:left;margin-left:150px;">
+													<select name="metricSelect" id="metricSelect">														            
+														<option value="">选择metric
+															<optgroup label="Mem" id="Mem" value="Mem">
+																<option value="mem_free" id="mem_free">mem free</option>
+																<option value="mem_available" id="mem_available">mem available</option>
+																<option value="mem_used" id="mem_used">mem used</option>
+																<option value="mem_usage" id="mem_usage">mem usage</option>
+																<option value="buffers" id="buffers">buffers</option>
+																<option value="cached" id="cached">cached</option>
+																<option value="swap_cached" id="swap_cached">swap cached</option>
+																<option value="swap_free" id="swap_free">swap free</option>
+															</optgroup>
+															<optgroup label="CPU" id="CPU" value="CPU">
+																<option value="cpu_user" id="cpu_user">CPU user</option>
+																<option value="cpu_nice" id='cpu_nice'>CPU nice</option>
+																<option value="cpu_system" id='cpu_system'>CPU system</option>
+																<option value="cpu_usage" id='cpu_usage'>CPU usage</option>
+																<option value="cpu_iowait" id="cpu_iowait">CPU iowait</option>
+																<option value="cpu_irq" id="cpu_irq">CPU irq</option>
+																<option value="cpu_softirq" id="cpu_softirq">CPU softirq</option>
+															</optgroup>
+															<optgroup label="Net" id="Net" value="Net">
+																<option value="bytes_in" id="bytes_in">bytes in</option>
+																<option value="bytes_out" id="bytes_out">bytes out</option>
+																<option value="packets_in" id="packages_in">packets in</option>
+																<option value="packets_out" id="packages_out">packets out</option>
+															</optgroup>
+															<optgroup label="Disk" id="Disk" value="Disk">
+																<option value="rps" id="rps">r/s</option>
+																<option value="wps" id="wps">w/s</option>
+																<option value="rrqmps" id="rrqmps">rrqm/s</option>
+																<option value="wrqmps" id="wrqmps">wrqm/s</option>
+																<option value="rkBps" id="rkBps">rkB/s</option>
+																<option value="wkBps" id="wkBps">wkB/s</option>
+																<option value="util" id="util">util%</option>
+																<option value="await" id="await">await</option>
+																<option value="avgrq_sz" id="avgrq_sz">avgrq-sz</option>
+																<option value="avgqu_sz" id="avgqu_sz">avgqu-sz</option>
+															</optgroup>
+															<optgroup label="Load" id="Load" value="Load">
+																<option value="load_one" id="load_one">load one</option>
+																<option value="load_five" id="load_five">load five</option>
+																<option value="load_fifteen" id="load_fifteen">load fifteen</option>
+															</optgroup>
+														</option>
+													</select>
+												</div>
+												<div id="radio" style="float:left;margin-left:20px;">
+													<select name="timeSelect" id="timeSelect">
+														<option value="60">1m</option>
+														<option value="600">10m</option>
+														<option value="1800">30m</option>
+														<option value="3600">1h</option>
+														<option value="21600">6h</option>
+														<option value="86400">1d</option>
+														<option value="432000">5d</option>
+														<!--<option value="0">RealTime</option>-->
+													</select>						
+												</div>
+												<div id="metricDescription" style="float:left;margin-left:20px;width:200px;padding-top:2px;font-size:14px;"></div>
+												<div style="clear:both"></div>
+											</div>
+											<div id="statusMonitorDetails" style="padding: 0px; position: relative;">
+												<div class="tickLabels" style="font-size:smaller"></div>
+											</div>
+										</div>
+										<!--HostStatus end-->
+									</div>
+									<!--System Status Container end-->
+								</div>
+								<!--Graph Container end-->
+							</div>
+							<!--platform-mainarea end-->
+						</div>					
+						<!--Hosts&Vms Details end-->
+
+
+						<!--Traces -->
+						<div id="traces" style="display: none;">
+							<!--control bar-->
+							<div class="control-bar"> 
+								<div style="float:left; font-family:Verdana,Arial,sans-serif; color:black; font-size:13px; font-weight:bold; margin:8px;">
+									选择节点: 
+								</div>
+								<select class="select_site">
+									<option value="ustc2">中国科学技术大学-2</option>
+								</select>
+								<div class="mybutton" style="float:right">
+									<a id="adminTraceRefreshTableButton" value="refresh" name="refresh" href="javascript:void(0);">刷新</a>
+								</div>
+							</div>
+							<!--control bar end-->
+							<!--platform mainarea-->
+							<div class="platform-mainarea">
+								<!--general traces-->
+								<div id="general_traces">
+									<table cellpadding="0" cellspacing="0" border="0" class="display crane-tableview" id="adminGeneralTracesTable">
+										<thead><tr>
+											<th>接口</th>
+											<th>包类</th>
+											<th>总量</th>
+											<th>异常率</th>
+											<th>失败</th>
+											<th>超时</th>
+											<th>上次访问</th>
+										</tr></thead>
+										<tbody align="center" onselectstart="return false" style="cursor:default">
+										</tbody>
+									</table>
+								</div>
+								<!--general traces end-->
+								<!--traces details container-->
+								<div id="adminTracesDetailsContainer">
+									<div id="adminTracesContainer" class="ui-widget-content">
+										<div id="tracesTableContainer">
+											<table cellpadding="0" cellspacing="0" border="0" class="display crane-tableview" id="adminDetailsTracesTable">
+												<thead><tr>
+													<th>ID</th>
+													<th>时间</th>
+													<th>响应时间(ms)</th>
+													<th>状态</th>
+												</tr></thead>
+												<tbody align="center" onselectstart="return false" style="cursor:default">
+												</tbody>
+											</table>
+										</div>
+										<div id="reportContainer">
+											<div id="generalReports"></div>
+											<br>
+											<div id="detailReports"></div>
+										</div>
+										<div id="adminTracesGraphContainer">
+										</div>
+										<div id="moveleft"><a href="javascript:void(0)">&lt;left</a></div>
+										<div id="moveright"><a href="javascript:void(0)">right&gt;</a></div>
+										<div style="clear:both"></div>
+									</div>
+								</div>
+								<!--traces details container end-->
+							</div>
+							<!--platform mainarea end-->
+						</div>
+						<!--Traces end-->
+
+
+						<!--Cluster Service -->
+						<div id="clusterService" style="display: none;" >                 
+							<!--control-bar-->
+							<div class="control-bar"> 
+								<div class="mybutton" style="float:right">
+									<a id="adminSystemServiceRefreshTableButton" value="refresh" name="refresh" href="javascript:void(0);">刷新</a>
+								</div>                                                                        
+							</div>
+							<!--control bar end-->
+
+							<!--platform mainarea -->
+							<div class="platform-mainarea" >
+							</div>
+							<!--platform mainarea end-->
+						</div>
+						<!--CLuster Service end-->
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

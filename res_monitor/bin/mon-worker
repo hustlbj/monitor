@@ -1,0 +1,96 @@
+#!/bin/sh
+MONDIR="$( cd -P `dirname $0` && cd -P ../ && pwd )"
+RCDIR="/etc"
+INSTALLDIR="/usr/local/monitor"
+
+while getopts ":o:p:" opt
+do
+    case "$opt" in
+    o)
+        operation=$OPTARG
+        ;;
+    p)
+        ip=$OPTARG
+        ;;    
+   esac
+done
+
+case "$operation" in 
+'setup')
+    cd $MONDIR
+   
+    server=`cat monitorrc | grep "server" | awk '{print $2}'`
+    if [ -n "$server" ]; then
+        sed -i "s/s_addr =.*/s_addr = '$server'/g" monworker/worker.conf
+    fi
+ 
+    if [ -n "$ip" ]; then
+		echo "install monworker..."
+        if [ -n "`cat monitorrc | grep 'worker $ip'`"]; then
+            echo "worker $ip" >> monitorrc 
+        fi
+
+        sed -i "s/c_addr =.*/c_addr = '$ip'/g" monworker/worker.conf
+ 
+        ssh $ip "if [ -d $INSTALLDIR ]; then
+                     if [ -d $INSTALLDIR/res_monitor ]; then 
+                         rm -rf $INSTALLDIR/res_monitor/monworker; 
+                     else 
+                         mkdir $INSTALLDIR/res_monitor; 
+                     fi
+                 else
+                     mkdir $INSTALLDIR
+                     mkdir $INSTALLDIR/res_monitor
+                 fi"
+
+        scp -r monworker $ip:$INSTALLDIR/res_monitor
+		echo "done"
+		echo "starting monworker..."
+        ssh $ip "if [ -z '`cat $RCDIR/rc.local | grep monworkerd`' ];then
+                     touch $RCDIR/rc.local;
+                     echo '$INSTALLDIR/res_monitor/monworker/monworkerd start' >> $RCDIR/rc.local;
+                 fi
+				 chmod -R 755 $INSTALLDIR/res_monitor/monworker/
+                 $INSTALLDIR/res_monitor/monworker/monworkerd start"
+		echo "done"
+    else
+        echo "need ip."
+    fi
+    ;;
+
+
+'remove')
+    if [ -n "$ip" ]; then
+		echo "remove monworker..."
+        if [ -n "cat monitorrc | grep 'worker $ip'" ]; then
+            sed -i "s/worker $ip//g" monitorrc
+        fi
+
+        ssh $ip "$INSTALLDIR/res_monitor/monworker/monworkerd stop"
+        ssh $ip "sed -i 's/.*monworkerd.*//g' $RCDIR/rc.local;
+                 if [ -d $INSTALLDIR/res_monitor ]; then \
+                     rm -rf $INSTALLDIR/res_monitor/monworker; \
+                 fi"
+		echo "done"
+    else
+        echo "need ip."
+    fi
+    ;;
+
+
+'run')
+    if [ -n "$ip" ]; then
+        ssh $ip "$INSTALLDIR/res_monitor/monworker/monworkerd start"
+    fi
+    ;;
+
+
+'stop')
+    if [ -n "$ip" ]; then
+        ssh $ip "$INSTALLDIR/res_monitor/monworker/monworkerd stop" 
+    fi
+    ;;
+
+esac
+
+

@@ -1,0 +1,197 @@
+
+body {
+    padding:0;
+    margin:0;       
+    background-color: whitesmoke;
+}
+
+.main_comp_panel {
+	display: block;
+	height: 500px;
+	padding-left:11px;
+}
+
+.page_title {
+	display: block;
+	margin-top: 20px;
+	padding: 5px;
+	font-family: Helvetics;
+	width: 400px;
+	float: none;
+	background: #B1C0F2;
+	color: #222222;
+	border-color: #aa99f0;
+	//letter-spacing: 0.3em;
+	//box-shadow: 0 1px 0 rgb(255,255,255,1), 0 0 2px rgb(0,0,0,0.3) inset;
+	font-size: 14px;
+	line-height: 24px;
+	text-align: center;
+	border: 1px solid #BBB;
+	border-radius: 3px;
+	
+}
+
+.div_head {
+	position: absolute;
+	left: 80px;
+	margin: 5px;
+}
+
+.div_monitor {
+	//height: 400px;
+	margin-top: 20px;
+	display: block;
+}
+
+.div_title {
+    width: 700px;
+    height: 25px;
+    border-radius: 0.5em;
+    //color: white;
+    padding: 0.5em;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    z-index: 15;
+    font-size: 15px;
+}
+.div_state_flow {
+  position: relative;
+  width: 600px;
+  height: 60px;
+  padding: 0.5em; 
+  margin: 0.5em; 
+}
+
+.div_overlay { 
+    position: absolute; 
+    width: 100px; 
+    height: auto; 
+    line-height: 12px;
+    border:1px solid #346789; 
+    border-radius:0.5em;        
+    opacity:0.8; 
+    filter:alpha(opacity=80);
+    background-color:white;
+    color:black;
+    padding:0.5em;   
+    z-index:21; 
+    -moz-opacity: 0.8; 
+    opacity: 0.8; 
+    filter: alpha(opacity=88); 
+}
+
+.wrong_msg {
+  color: red;
+  font-weight: bold;  
+}
+
+.normal_msg {
+  color: green;
+  font-weight: normal;
+}
+
+.history {
+  color: black;
+  font-weight: normal;
+}
+
+.active {
+  font-weight: bold;
+}
+
+.big_font {
+  font-size: 15px;
+}
+
+.middle_font {
+  font-size: 10px;
+}
+
+.small_font {
+  font-size: 8px;
+}
+
+
+.component { 
+  border:1px solid #346789; 
+  border-radius:0.5em;        
+  opacity:0.8; 
+  filter:alpha(opacity=80);
+  background-color:white;
+  padding:0.5em;   
+}
+
+.component:hover {
+    border:1px solid #123456;
+    box-shadow: 2px 2px 19px #444;
+   -o-box-shadow: 2px 2px 19px #444;
+   -webkit-box-shadow: 2px 2px 19px #444;
+   -moz-box-shadow: 2px 2px 19px #fff;
+    opacity:0.9;
+    filter:alpha(opacity=90);
+}
+
+.window {
+    background-color:white;
+    border:1px solid #346789;
+    box-shadow: 2px 2px 19px #e0e0e0;
+    -o-box-shadow: 2px 2px 19px #e0e0e0;
+    -webkit-box-shadow: 2px 2px 19px #e0e0e0;
+    -moz-box-shadow: 2px 2px 19px #e0e0e0;
+    -moz-border-radius:0.5em;
+    border-radius:0.5em;               
+    position:absolute;    
+    padding:0.5em;  
+    line-height: 60px;
+    -webkit-transition: -webkit-box-shadow 0.15s ease-in;
+    -moz-transition: -moz-box-shadow 0.15s ease-in;
+    -o-transition: -o-box-shadow 0.15s ease-in;
+    transition: box-shadow 0.15s ease-in;
+}
+
+.window:hover {
+    border:1px solid #123456;
+    box-shadow: 2px 2px 19px #444;
+   -o-box-shadow: 2px 2px 19px #444;
+   -webkit-box-shadow: 2px 2px 19px #444;
+   -moz-box-shadow: 2px 2px 19px #fff;
+    opacity:0.9;
+    filter:alpha(opacity=90);
+}
+
+.window a {
+    font-family:helvetica;
+}
+
+.window, .label {   
+  text-align:center;
+  z-index:20;
+  cursor:pointer;
+  box-shadow: 2px 2px 19px #aaa;
+  -o-box-shadow: 2px 2px 19px #aaa;
+  -webkit-box-shadow: 2px 2px 19px #aaa;
+  -moz-box-shadow: 2px 2px 19px #aaa;
+    
+}
+
+.aLabel {
+  background-color:white; 
+  padding:0.4em; 
+  font:12px sans-serif; 
+  color:#444;
+  z-index:11;
+  border:1px dotted gray;
+  opacity:0.8;
+  filter:alpha(opacity=80);
+  cursor: pointer;
+}
+.aLabel._jsPlumb_hover {
+  background-color:#5C96BC;
+  color:white;  
+  border:1px solid white;
+}
+
+.aLine {
+  z-index:10;
+}

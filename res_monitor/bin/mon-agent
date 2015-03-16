@@ -1,0 +1,104 @@
+#!/bin/sh
+MONDIR="$( cd -P `dirname $0` && cd -P ../ && pwd )"
+RCDIR="/etc"
+INSTALLDIR="/usr/local/monitor"
+
+while getopts ":o:p:n:t:" opt
+do
+    case "$opt" in
+    o)
+        operation=$OPTARG
+        ;;
+    p)
+        ip=$OPTARG
+        ;;    
+    t)
+        type=$OPTARG
+        ;;    
+    n)
+        name=$OPTARG
+        ;;
+    esac
+done
+
+case "$operation" in 
+'setup')
+    cd $MONDIR
+   
+    server=`cat monitorrc | grep "server" | awk '{print $2}'`
+    if [ -n "$server" ]; then
+        sed -i "s/server_addr =.*/server_addr = '$server'/g" monagent/agent.conf
+    fi
+    
+    if [ -z $type ]; then
+        type=0
+    fi
+    sed -i "s/is_virtual = .*/is_virtual = $type/g" monagent/agent.conf
+    if [ $type==0 ] && [ -z "`cat monitorrc|grep 'agent $ip'`" ]; then
+        echo "agent $ip" >> monitorrc
+    fi
+
+    if [ -n "$name" ]; then
+        sed -i "s/hostname = .*/hostname = '$name'/g" monagent/agent.conf
+    else
+        sed -i "s/hostname = .*/hostname = ''/g" monagent/agent.conf
+    fi
+ 
+    if [ -n "$ip" ]; then
+		echo "install monagent..."
+        ssh root@$ip "if [ -d $INSTALLDIR ]; then
+                         if [ -d $INSTALLDIR/res_monitor ]; then 
+                             rm -rf $INSTALLDIR/res_monitor/monagent; 
+                         else 
+                             mkdir $INSTALLDIR/res_monitor; 
+                         fi
+                     else
+                         mkdir $INSTALLDIR
+                         mkdir $INSTALLDIR/res_monitor
+                     fi"
+
+        scp -r monagent root@$ip:$INSTALLDIR/res_monitor
+        ssh root@$ip "touch $RCDIR/rc.local;
+                      echo '$INSTALLDIR/res_monitor/monagent/monagentd start' >> $RCDIR/rc.local;
+					  chmod -R a+x $INSTALLDIR/res_monitor/monagent
+                      $INSTALLDIR/res_monitor/monagent/monagentd start"
+		echo "done"
+    else
+        echo "need ip."
+    fi
+    ;;
+
+
+'remove')
+    cd $MONDIR
+	echo "remove monagent..."
+    if [ -n "$ip" ]; then
+        ssh root@$ip "$INSTALLDIR/res_monitor/monagent/monagentd stop"
+        ssh root@$ip "sed -i 's/.*monagentd.*//g' $RCDIR/rc.local;
+                      if [ -d $INSTALLDIR/res_monitor ]; then \
+                          rm -rf $INSTALLDIR/res_monitor/monagent; \
+                      fi"
+        sed -i "s/agent $ip//g" monitorrc
+	echo "done"
+    else
+        echo "need ip."
+    fi
+    ;;
+
+
+'run')
+    if [ -n "$ip" ]; then
+        ssh root@$ip "$INSTALLDIR/res_monitor/monagent/monagentd start"
+    fi
+    ;;
+
+
+'stop')
+    if [ -n "$ip" ]; then
+        ssh root@$ip "$INSTALLDIR/res_monitor/monagent/monagentd stop" 
+    fi
+    ;;
+
+esac
+
+

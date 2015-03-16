@@ -1,0 +1,47 @@
+#!/bin/sh
+MONDIR="$( cd -P `dirname $0` && cd -P ../ && pwd )"
+
+opt=$1
+
+cd $MONDIR
+LIST=`cat monitorrc | grep agent | awk '{print $2}'`
+
+case "$opt" in
+start)
+
+    for agent in $LIST
+    do
+        echo $agent
+        if [ -n "`ifconfig 2>/dev/null | grep '$agent '`" ]; then
+            monagent/monagentd start
+        else
+            bin/mon-agent -o run -p $agent
+        fi
+    done
+    ;;
+
+stop)
+    for agent in $LIST 
+    do
+        echo $agent
+        if [ -n "`ifconfig 2>/dev/null | grep '$agent '`" ]; then
+            monagent/monagentd stop
+        else
+            bin/mon-agent -o stop -p $agent
+        fi
+    done
+    ;;
+
+status)
+    for agent in $LIST
+    do
+        echo $agent
+        ssh $agent "ps aux | grep monagent | grep -v grep | grep -v status"
+    done
+    ;;
+
+*)
+    echo "$0 [ start | stop | status ]"
+    ;;
+    
+esac
