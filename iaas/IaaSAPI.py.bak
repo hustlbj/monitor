@@ -1,0 +1,274 @@
+#!/usr/bin/env python
+"""
+Created on Sep 4,2012
+
+@author LiYC
+"""
+
+from craneQueue.proxy import Proxy, RPCProxy
+
+from eventtrace import injection 
+
+class IaaSAPI(RPCProxy):
+    """Client side of the user manage rpc api
+
+    Make sure that which method should invoke the call method(waiting for the result) and which should invoke the cast method(do not waiting for the result)
+    """
+
+    __metaclass__ = injection.make_noconflict_metaclass('interface')
+
+    def __init__(self,conf,service):
+        """Initialize an user manange proxy
+
+        :param 'conf': It is a dict with the keys('RPC_EXCHANGE','TOPIC_EXCHANGE','DIRECT_EXCHANGE')
+        is used to define exchanges
+        :param 'service' : It is 'iaas_api'
+        """
+        super(IaaSAPI,self).__init__(conf,service)
+    
+    '''
+    Interface About User Keys 
+    '''
+    def usercreatekeys( self, username, keyname):
+        '''user create keys
+        '''
+        return self.call(self.make_msg('usercreatekeys', username=username,keyname=keyname),'usercreatekeys')
+
+    def userdelkeys(self, username,keyname):
+        '''user delete keys
+        '''
+        return self.call(self.make_msg('userdelkeys', username=username,keyname=keyname),'userdelkeys')
+
+    def querykeys( self, username):
+        '''query user's keys
+        '''
+        return self.call(self.make_msg('querykeys',username=username),'querykeys')
+
+    def downloadkeys( self, username, keyname):
+        '''get the key content
+        '''
+        return self.call(self.make_msg('downloadkeys', username=username, keyname=keyname),'downloadkeys')
+
+
+
+    '''
+    Interface About Host
+    '''
+    def get_hostpool_info(self):
+        '''get hostpool information
+        '''
+        return self.call(self.make_msg('get_hostpool_info'), 'get_hostpool_info')
+    
+    def get_host_info(self, host_id):
+        '''get host information
+        '''
+        return self.call(self.make_msg('get_host_info', host_id=host_id),'get_host_info' )
+    
+    def host_create(self, host, vmm):
+        '''add a host to the host resource pool
+        '''
+        return self.call(self.make_msg('host_create', host=host, vmm=vmm), 'host_create')
+    
+    def host_delete(self, host_id):
+        '''delete a host from the host pool
+        '''
+        return self.call(self.make_msg('host_delete', host_id= host_id), 'host_delete')
+    
+    '''
+    Interface About User
+    '''
+    def get_user_list(self):
+        '''get the list of users
+        '''
+        return self.call(self.make_msg('get_user_list'), 'get_user_list')
+    
+    def user_create(self, user):
+        '''register a user
+        '''
+        return self.call(self.make_msg('user_create', user=user), 'user_create')
+        
+    def user_delete(self, user):
+        '''delete a user with user name
+        '''
+        return self.call(self.make_msg('user_delete', user=user), 'user_delete')
+        
+    def init_user(self, user):
+        '''initialize the user. If the user is not exist, create it.
+        '''
+        return self.call(self.make_msg('init_user', user=user), 'init_user')
+    
+    def get_uid(self, user):
+        '''get the id of the user
+        '''
+        return self.call(self.make_msg('get_uid', user=user), 'get_uid')
+        
+    '''
+    Interface About Image
+    '''  
+    def get_imagepool_info(self, user):
+        '''get the detail information of images
+        '''
+        return self.call(self.make_msg('get_imagepool_info', user=user), 'get_imagepool_info')
+        
+    def get_image_info(self, user):
+        '''get the list of images available
+        '''
+        return self.call(self.make_msg('get_image_info', user=user), 'get_image_info')
+        
+    '''
+    Interface About Vmpool Or VmList
+    '''
+##    def get_vmpool_info(self, user):
+##        '''get the information of the vms which owned to the user,flag is 'iaas'
+##          and the LCM_STATE!=12 (shutdown)
+##        '''
+##        return self.call(self.make_msg('get_vmpool_info', user=user), 'get_vmpool_info')
+        
+    def get_all_vmpool_info(self, user):
+        '''get the information of the vms which owned to the user
+        '''
+        return self.call(self.make_msg('get_all_vmpool_info', user=user), 'get_all_vmpool_info')
+        
+    def get_vms_host(self, host_name):
+        ''' get the list of vms on a host,flag is 'iaas'
+        '''
+        return self.call(self.make_msg('get_vms_host', host_name=host_name), 'get_vms_host')
+        
+##    def get_vms_info(self, flag = -2, template = 1):
+##        '''get the information of all the vms,flag is 'iaas'
+##        '''
+##        return self.call(self.make_msg('get_vms_info', flag=flag, template=template), 'get_vms_info')
+        
+    def get_vmpool_info(self, user, flag = 'iaas'):
+        '''get the information of the vms which owned to the user
+           just for test the vm_xml_dict_w
+        '''
+        return self.call(self.make_msg('get_vmpool_info', user=user, flag=flag), 'get_vmpool_info')
+        
+    def get_vms_info(self, flag = -2, template = 1):
+        '''get the information of all the vms,flag is 'iaas'
+        '''
+        return self.call(self.make_msg('get_vms_info', flag=flag, template=template), 'get_vms_info')
+        
+    '''
+    Special Interface such as run_remote_command
+    '''
+    def run_remote_command(self, user, vm_id, command):
+        '''Run remote command on the vm,and get the return data
+        '''
+        return self.call(self.make_msg('run_remote_command', user=user, vm_id=vm_id, command=command), 'run_remote_command')
+
+
+    '''
+    Interface About VM
+    '''
+##    def get_vm_info(self, vm_id):
+##        '''get the information of the vm
+##        '''
+##        return self.call(self.make_msg('get_vm_info', vm_id=vm_id), 'get_vm_info')
+        
+    def get_vm_status(self, vm_id):
+        '''get the information of the vm
+        '''
+        return self.call(self.make_msg('get_vm_status', vm_id=vm_id), 'get_vm_status')
+        
+    def vm_action(self, user, action, vm_id):
+        '''control the vm. action can be shutdown,suspend,resume
+        '''
+        return self.call(self.make_msg('vm_action', user=user, action=action, vm_id=vm_id), 'vm_action')
+        
+    def vm_create(self, HVM):
+        '''creat vms with a configure file
+        '''
+        return self.call(self.make_msg('vm_create', HVM=HVM), 'vm_create')
+        
+    def vm_create_details(self,user_name, memory, vcpu, image_dir, count, userkey,start='now', duration='01:00:00', meepo='none'):
+        '''creat vms with a some parameters
+        '''
+        return self.call(self.make_msg('vm_create_details', user_name=user_name, memory=memory, vcpu=vcpu, image_dir=image_dir, count=count, userkey=userkey, start=start, duration=duration, meepo=meepo), 'vm_create_details')
+
+    def vm_delete(self, user, vm_id):
+        '''delete a vm of the user with the id
+        '''
+        return self.call(self.make_msg('vm_delete', user=user, vm_id=vm_id), 'vm_delete')
+        
+    def vm_destroy(self, user, vm_id):
+        '''destroy a vm of the user with the id
+        '''
+        return self.call(self.make_msg('vm_destroy', user=user, vm_id=vm_id), 'vm_destroy')
+        
+    def vm_migrate(self, user, vm_id, host_id, livemigration):
+        '''migrate a vm with id to the host with host_id
+        '''
+        return self.call(self.make_msg('vm_migrate', user=user, vm_id=vm_id, host_id=host_id, livemigration=livemigration), 'vm_migrate')
+    
+    def get_vm_info(self, vm_id):
+        '''get the information of the vm
+        '''
+        return self.call(self.make_msg('get_vm_info', vm_id=vm_id), 'get_vm_info')
+        
+    def get_vm_lcm_status(self, vm_id):
+        '''get the lcm status 
+        '''
+        return self.call(self.make_msg('get_vm_lcm_status', vm_id=vm_id), 'get_vm_lcm_status')
+        
+    def vm_sub(self, auth, CON_F):
+        '''create a vm
+        '''
+        return self.call(self.make_msg('vm_sub', auth=auth, CON_F=CON_F), 'vm_sub')
+        
+    def vms_sub(self, auth, CON_F, num):
+        '''create vms one by one
+        '''
+        return self.call(self.make_msg('vms_sub', auth=auth, CON_F=CON_F, num=num), 'vms_sub')
+    
+    def get_vm_ipv6(self, vmid):
+        '''get ipv6 of the vm with id
+        '''
+        return self.call(self.make_msg('get_vm_ipv6', vmid=vmid), 'get_vm_ipv6')
+ 
+    def get_vm_ip(self, id):
+        '''get the ip of the vm with id
+        '''
+        return self.call(self.make_msg('get_vm_ip', id=id), 'get_vm_ip')
+    
+    def get_ip_list(self, user, id_list):
+        '''get ips from ids one by one
+        '''
+        return self.call(self.make_msg('get_ip_list', user=user, id_list=id_list), 'get_ip_list')
+    
+if __name__=="__main__":
+    conf={}
+    conf["DIRECT_EXCHANGE"] = "call_direct_topic"
+    conf["TOPIC_EXCHANGE"] = "service_call_topic"
+    conf["RPC_EXCHANGE"] = "service_cast_topic"
+
+    iaas_api = IaaSAPI(conf,'iaas_api')
+
+    #rlt = iaas_api.get_hostpool_info()
+    #print 'sss'+rlt
+    #vmpool = iaas_api.get_vmpool_info('crane')
+    #print vmpool 
+
+    #rlt = iaas_api.querykeys('lily3')
+    #print rlt
+    #ch={ 'user':'test','memory':'512','vcpu':'2','img':'windows-server','count':1,'flag':'iaas' }
+    #ch={ 'user':'test','memory':'512','vcpu':'2','img':'/backup/webpaas/web_master.img','count':1,'flag':'paas' }
+    #ch={ 'user':'test','memory':'512','vcpu':'1','img':'centos-5.5-x86_64','count':1,'flag':'iaas','key':'default'}
+    #ch={ 'user':'test','memory':'512','vcpu':'2','img':'ubuntu-12.04-amd64','count':1,'flag':'iaas','key':'default' }
+    #hpc={ 'user':'test','memory':'512','vcpu':'2','img':'/backup/hpc/mpimeepo.img','count':1,'flag':'paas','key':'default','node':'crane03' }
+    #ch={ 'user':'test','memory':'512','vcpu':'2','img':'openSUSE-11.4-x86_64','count':1,'flag':'iaas','key':'default' }
+    
+    #print iaas_api.get_hostpool_info()
+    #print iaas_api.vm_create(ch)
+    #print iaas_api.vm_action('exper_04', 'shutdown', 3912)
+    #import time
+    #print time.time()
+    #for i in range(50):
+    rlt = iaas_api.get_vmpool_info('test')
+    print type(rlt)
+    print rlt
+    #print time.time()
+    #import json
+    #print [vm['guid'] for vm in json.loads(iaas_api.get_vms_info(template=0))[1]]
+    #print [vm['guid'] for vm in json.loads(iaas_api.get_vms_info())[1]]

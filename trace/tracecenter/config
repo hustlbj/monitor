@@ -1,0 +1,28 @@
+
+# Log file's path
+log_file = '/tmp/tracecenter.log'
+
+# IP of front node
+frontnode = '202.114.10.146'
+
+# Collector
+[collector]
+c_addr = '202.114.10.146'
+c_port = 41065
+
+# Configuration of Mongo DB
+[db]
+d_addr = '202.114.10.146'
+d_port = 27017
+
+# db name
+db = 'newtrace'
+
+
+[detect]
+vola = 0.7
+min_k = 10
+max_k = 30
+
+[analyzer]
+worker_num = 1

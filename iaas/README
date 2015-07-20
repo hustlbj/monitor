@@ -1,0 +1,34 @@
+##########################
+this is about IaaSAPI
+##########################
+###
+you can use IaaSAPI by this steps:
+###
+import IaaSAPI
+conf={}
+conf["DIRECT_EXCHANGE"] = "call_direct_topic"
+conf["TOPIC_EXCHANGE"] = "service_call_topic"
+conf["RPC_EXCHANGE"] = "service_cast_topic"
+op = IaaSAPI.IaaSAPI(conf,'iaas_api')
+
+###
+then you can call the interfaces provided by iaas_api,like follows
+###
+rlts = iaas_api.get_vmpool_info("test")
+print rlts
+rlt = iaas_api.get_hostpool_info()
+print rlt
+
+###
+the vm create HVM dict examples
+###
+HVM={'vcpu': '1', 'count': 1, 'user': 'test', 'img':'/backup/images/web_db.img', 'memory': '512','flag':'paas','key':'default'}
+HVM={'vcpu': '1', 'count': 1, 'user': 'test', 'img': 'centos-5.5-x86_64','memory': '256','flag':'iaas','key':'default'}
+
+###
+#For Windows VM
+###
+1 Frist use the Windows HVM to create a VM
+HVM = {'count': 1, 'img': 'windows-server', 'vcpu': '2', 'flag': 'iaas', 'user': 'test', 'memory': '1024'}
+2 Then use iaas's get_vm_info(vm_id) to get the vncport( write as the sshport)
+3 Now you can access the windows vm by VNC, the ip is the outer ip of cluster, port is the vncport.
